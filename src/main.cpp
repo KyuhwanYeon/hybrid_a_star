@@ -1,38 +1,34 @@
 #include <iostream>
 #include <vector>
+#include <stdio.h>
+#include <math.h>
 #include "hybrid-a-star.h"
+#include "viewer.h"
+#include "struct.h"
 
 
 using std::cout;
 using std::endl;
 using namespace std;
-// Sets up maze grid
-int X = 1;
-int _ = 0;
-
-/**
- * TODO: You can change up the grid maze to test different expansions.
- */
 vector<vector<int>> GRID = {
-  {_,X,X,_,_,_,_,_,_,_,X,X,_,_,_,_,},
-  {_,X,X,_,_,_,_,_,_,X,X,_,_,_,_,_,},
-  {_,X,X,_,_,_,_,_,X,X,_,_,_,_,_,_,},
-  {_,X,X,_,_,_,_,X,X,_,_,_,X,X,X,_,},
-  {_,X,X,_,_,_,X,X,_,_,_,X,X,X,_,_,},
-  {_,X,X,_,_,X,X,_,_,_,X,X,X,_,_,_,},
-  {_,X,X,_,X,X,_,_,_,X,X,X,_,_,_,_,},
-  {_,X,X,X,X,_,_,_,X,X,X,_,_,_,_,_,},
-  {_,X,X,X,_,_,_,X,X,X,_,_,_,_,_,_,},
-  {_,X,X,_,_,_,X,X,X,_,_,X,X,X,X,X,},
-  {_,X,_,_,_,X,X,X,_,_,X,X,X,X,X,X,},
-  {_,_,_,_,X,X,X,_,_,X,X,X,X,X,X,X,},
-  {_,_,_,X,X,X,_,_,X,X,X,X,X,X,X,X,},
-  {_,_,X,X,X,_,_,X,X,X,X,X,X,X,X,X,},
-  {_,X,X,X,_,_,_,_,_,_,_,_,_,_,_,_,},
-  {X,X,X,_,_,_,_,_,_,_,_,_,_,_,_,_,}};
+  {0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,},
+  {0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,},
+  {0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,},
+  {0,1,1,0,0,0,0,1,1,0,0,0,1,1,1,0,},
+  {0,1,1,0,0,0,1,1,0,0,0,1,1,1,0,0,},
+  {0,1,1,0,0,1,1,0,0,0,1,1,1,0,0,0,},
+  {0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,},
+  {0,1,1,1,1,0,0,0,0,0,1,0,0,0,0,0,},
+  {0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,},
+  {0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,},
+  {0,1,0,0,0,1,1,1,0,0,1,1,1,1,1,1,},
+  {0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,},
+  {0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,},
+  {0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,},
+  {0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,},
+  {1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,},};
+  // {1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,}};
 
-vector<double> START = {0.0,0.0,0.0};
-vector<int> GOAL = {(int)GRID.size()-1, (int)GRID[0].size()-1};
 vector<double> start_pos = {0.0f, 0.0f, 0.0f};
 vector<double> goal_pos = {(double)GRID.size()-1, (double)GRID[0].size()-1, 0.0f};
 
@@ -47,22 +43,25 @@ int main() {
     }
     cout << endl;
   }
+  printf("x: %d, y: %d \n", GRID.size(),GRID[0].size());
 
-  HybridAStar hybrid_a_star = HybridAStar(start_pos, goal_pos);
+  HybridAStar hybrid_a_star = HybridAStar(start_pos, goal_pos, GRID);
+  Viewer viewer = Viewer(GRID);
+  Path get_path = hybrid_a_star.Search();
 
-  HybridAStar::Path get_path = hybrid_a_star.Search(GRID,START,GOAL);
-
-  vector<HybridAStar::State> show_path = hybrid_a_star.ReconstructPath(get_path.came_from, 
-                                                       START, get_path.final);
+  vector<State> show_path = hybrid_a_star.ReconstructPath(get_path.came_from, 
+                                                       start_pos, get_path.final);
 
   cout << "show path from start to finish" << endl;
   for(int i = show_path.size()-1; i >= 0; --i) {
-      HybridAStar::State step = show_path[i];
+      State step = show_path[i];
       cout << "##### step " << step.g << " #####" << endl;
       cout << "x " << step.x << endl;
       cout << "y " << step.y << endl;
       cout << "theta " << step.theta << endl;
   }
   
+  viewer.set_visited_path(show_path);
+  viewer.show_image();
   return 0;
 }
