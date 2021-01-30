@@ -48,9 +48,9 @@ int main() {
 
   HybridAStar hybrid_a_star = HybridAStar();
 
-  HybridAStar::Path get_path = hybrid_a_star.search(GRID,START,GOAL);
+  HybridAStar::Path get_path = hybrid_a_star.Search(GRID,START,GOAL);
 
-  vector<HybridAStar::State> show_path = hybrid_a_star.reconstruct_path(get_path.came_from, 
+  vector<HybridAStar::State> show_path = hybrid_a_star.ReconstructPath(get_path.came_from, 
                                                        START, get_path.final);
 
   cout << "show path from start to finish" << endl;
