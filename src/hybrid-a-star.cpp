@@ -3,10 +3,6 @@
 #include <vector>
 #include "hybrid-a-star.h"
 #include <algorithm>
-// Initializes HybridAStar
-HybridAStar::HybridAStar() {}
-
-HybridAStar::~HybridAStar() {}
 
 int HybridAStar::Theta2Stack(double theta){
   // Takes an angle (in radians) and returns which "stack" in the 3D 
@@ -25,11 +21,12 @@ int HybridAStar::Idx(double float_num) {
   //   index 3.
   return int(floor(float_num));
 }
-bool HybridAStar::Compare(vector<int> v1, vector<int> v2)
+
+
+
+bool HybridAStar::Compare(State v1, State v2)
 {
-    int f1 = v1[2]+v1[3];
-    int f2 = v2[2]+v2[3];
-    if (f1> f2)
+    if (v1.f < v2.f)
     {
         return true;
     }
@@ -39,7 +36,7 @@ bool HybridAStar::Compare(vector<int> v1, vector<int> v2)
     }
     
 }
-void HybridAStar::CellSort(vector<vector<int>> *v) {
+void HybridAStar::Sort(vector<State> *v) {
   sort(v->begin(), v->end(), HybridAStar::Compare);
 }
 
@@ -54,7 +51,6 @@ vector<HybridAStar::State> HybridAStar::Expand(HybridAStar::State &state) {
   int g = state.g;
   double x = state.x;
   double y = state.y;
-	double h = state.h;
   double theta = state.theta;
     
   int next_g = g+1;
@@ -74,6 +70,8 @@ vector<HybridAStar::State> HybridAStar::Expand(HybridAStar::State &state) {
     next_state.g = next_g;
     next_state.x = next_x;
     next_state.y = next_y;
+    next_state.h = Heuristic(next_x, next_y, goal_pos_[0], goal_pos_[1]);
+    next_state.f = next_state.g + next_state.h;
     next_state.theta = next_theta;
     next_states.push_back(next_state);
   }
@@ -126,6 +124,8 @@ HybridAStar::Path HybridAStar::Search(vector< vector<int> > &grid, vector<double
 
   State state;
   state.g = g;
+  state.h = Heuristic(start_pos_[0], start_pos_[1], goal_pos_[0], goal_pos_[1]);
+  state.f = state.g + state.h;
   state.x = start[0];
   state.y = start[1];
   state.theta = theta;
@@ -136,8 +136,9 @@ HybridAStar::Path HybridAStar::Search(vector< vector<int> > &grid, vector<double
   vector<State> opened = {state};
   bool finished = false;
   while(!opened.empty()) {
-    State current = opened[0]; //grab first elment
-    opened.erase(opened.begin()); //pop first element
+    Sort(&opened); // opened is sorted by f
+    State current = opened[0]; 
+    opened.erase(opened.begin()); // pop current state
 
     int x = current.x;
     int y = current.y;

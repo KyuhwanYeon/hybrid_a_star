@@ -33,6 +33,8 @@ vector<vector<int>> GRID = {
 
 vector<double> START = {0.0,0.0,0.0};
 vector<int> GOAL = {(int)GRID.size()-1, (int)GRID[0].size()-1};
+vector<double> start_pos = {0.0f, 0.0f, 0.0f};
+vector<double> goal_pos = {(double)GRID.size()-1, (double)GRID[0].size()-1, 0.0f};
 
 int main() {
   cout << "Finding path through grid:" << endl;
@@ -46,7 +48,7 @@ int main() {
     cout << endl;
   }
 
-  HybridAStar hybrid_a_star = HybridAStar();
+  HybridAStar hybrid_a_star = HybridAStar(start_pos, goal_pos);
 
   HybridAStar::Path get_path = hybrid_a_star.Search(GRID,START,GOAL);
 

@@ -11,17 +11,17 @@ class HybridAStar
 {
 public:
   // Constructor
-  HybridAStar();
-
+  HybridAStar(vector<double> start_pos, vector<double> goal_pos) : start_pos_(start_pos), goal_pos_(goal_pos) {}
   // Destructor
-  virtual ~HybridAStar();
+  ~HybridAStar() {}
+
 
   // HybridAStar structs
   struct State
   {
     int g; // iteration
     double h;
-    double cost;
+    double f; // cost
     double x;
     double y;
     double theta;
@@ -47,12 +47,14 @@ public:
   Path Search(vector<vector<int>> &grid, vector<double> &start,
               vector<int> &goal);
   double Heuristic(double x1, double y1, double x2, double y2);
-  void CellSort(vector<vector<int>> *v);
-  bool static Compare(vector<int> v1, vector<int> v2);
+  void Sort(vector<State> *v);
+  bool static Compare(State v1, State v2);
 private:
   const int NUM_THETA_CELLS = 90;
   const double SPEED = 1.45;
   const double LENGTH = 0.5;
+  vector<double> start_pos_;
+  vector<double> goal_pos_;
 };
 
 #endif // HYBRID_A_STAR_H
