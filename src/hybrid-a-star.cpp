@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include "hybrid-a-star.h"
-
 #include <algorithm>
 
  HybridAStar::HybridAStar(vector<double> start_pos, vector<double> goal_pos, vector<vector<int>> grid) : start_pos_(start_pos), goal_pos_(goal_pos), grid_(grid) 
@@ -66,13 +65,13 @@ vector<State> HybridAStar::Expand(State &state) {
   vector<State> next_states;
 
   for(double delta_i = -MAX_STEERING; delta_i <= MAX_STEERING; delta_i+=5) {
+    // kinematic model
     double delta = DEG2RADIAN * delta_i;
     double omega = SPEED / VEHICLE_LEGTH * (delta) * DT;
     double next_theta = theta + omega;
     if(next_theta < 0) {
       next_theta += 2*M_PI;
     }
-		// bicycle model
     double next_x = x + SPEED * cos(theta)* DT;
     double next_y = y + SPEED * sin(theta)* DT;
     State next_state;
@@ -90,7 +89,7 @@ vector<State> HybridAStar::Expand(State &state) {
 }
 
 vector< State> HybridAStar::ReconstructPath(
-  vector<vector<vector<State>>> &came_from, vector<double> &start, 
+  vector<vector<vector<State>>> &came_from, 
   State &final) {
 
   vector<State> path = {final};
@@ -103,23 +102,24 @@ vector< State> HybridAStar::ReconstructPath(
   
   double x = current.x;
   double y = current.y;
-  while(x != start[0] || y != start[1]) {
+  while(x != start_pos_[0] || y != start_pos_[1]) {
     path.push_back(current);
     current = came_from[stack][Idx(x)][Idx(y)];
     x = current.x;
     y = current.y;
     stack = Theta2Stack(current.theta);
   }
+  State start_state;
+  start_state.x = start_pos_[0];
+  start_state.y = start_pos_[1];
+  start_state.theta = start_pos_[2];
+  path.push_back(start_state);
+
   
   return path;
 }
 
 Path HybridAStar::Search() {
-  // Working Implementation of breadth first search. Does NOT use a heuristic
-  //   and as a result this is pretty inefficient. Try modifying this algorithm 
-  //   into hybrid A* by adding heuristics appropriately.
-
-
   vector<vector<vector<int>>> closed(
     NUM_THETA_CELLS, vector<vector<int>>(grid_[0].size(), vector<int>(grid_.size())));
   vector<vector<vector<State>>> came_from(

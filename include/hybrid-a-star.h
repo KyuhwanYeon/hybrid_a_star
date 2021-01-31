@@ -27,8 +27,7 @@ public:
 
   vector<State> Expand(State &state);
 
-  vector<State> ReconstructPath(vector<vector<vector<State>>> &came_from,
-                                vector<double> &start, State &final);
+  vector<State> ReconstructPath(vector<vector<vector<State>>> &came_from, State &final);
 
   Path Search();
 
