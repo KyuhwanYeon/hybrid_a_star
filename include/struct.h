@@ -2,7 +2,8 @@
 #define STRUCT_H
 #include <vector>
 using std::vector;
-
+#define VEHICLE_LEGTH 0.5
+#define VEHICLE_WIDTH 0.3
 // HybridAStar structs
 struct State
 {
