@@ -19,11 +19,15 @@ public:
 	Viewer(vector<vector<int>> grid_world);
 	~Viewer(){}
 	void set_visited_path(vector<State> visited_path);
+	void poly_path(void);
 	void show_image();
 	void clear_image();
 private:
 	void arrowedLine(Mat img, Point pt1, Point pt2, const Scalar &color,
 								 int thickness, int line_type, int shift, double tipLength);
+	void draw_vehicle(Mat img, const double& x, const double& y, const double& theta, const Scalar &color, const double& thickness);
+	
+
 	int origin_x = NUM2PIXEL/2;
 	int origin_y = NUM2PIXEL/2;
 	vector<vector<int>> grid_world_;
