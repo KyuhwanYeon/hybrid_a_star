@@ -1,8 +1,10 @@
-# Hybrid A* for path planning
+# Hybrid A* search
 
 ![](img/hybrid_a_star.gif)
 
-This repo implements the simple hybrid a* for path planning from start position to goal position. It uses kinematic model for model constraint. Also, it visualizes the path and the map via OpenCV.
+This repo implements the simple hybrid a* for search the optimal path from start position to goal position. It uses kinematic model for model constraint. Also, it visualizes the path and the map via OpenCV.
+
+For more information, please visit this [blog post](https://kyuhwanyeon.github.io/planning/hybrid-astar/)
 
 
 ## Features
@@ -44,7 +46,7 @@ This repo implements the simple hybrid a* for path planning from start position 
 
 
 
-## Basic Build Instructions
+## Build
 
 ```shell
 mkdir build && cd build
