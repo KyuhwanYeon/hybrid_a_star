@@ -43,7 +43,6 @@ int main() {
   vector<vector<State>> opened_lists = hybrid_a_star.get_opened_visulizer();
   // Visualize the open lists
   viewer.show_image();
-  waitKey( 0);
   for (int i = 0; i < opened_lists.size(); i++)
   {
     viewer.set_visited_path(opened_lists[i]);
